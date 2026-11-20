@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Daymark 메모</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="widget">
+      <header class="bar memo-bar" data-tauri-drag-region>
+        <button class="pin-button" type="button" data-pin-window="memo" aria-label="항상 위에 고정" aria-pressed="false" hidden></button>
+        <div class="bar-actions">
+          <span class="save-state" id="memo-status" role="status" hidden></span>
+          <button id="close-memo" type="button" aria-label="메모 닫기" title="메모 닫기">×</button>
+        </div>
+      </header>
+      <div class="memo-tab-bar" id="memo-tab-bar" aria-label="메모 탭">
+        <div id="memo-tabs"></div>
+        <span class="memo-drop-preview" id="memo-drop-preview" aria-hidden="true" hidden>여기에 놓기</span>
+        <button type="button" id="add-memo-tab" aria-label="메모 탭 추가" title="메모 탭 추가" disabled>＋</button>
+      </div>
+      <div class="detached-memo-title" id="detached-memo-title" hidden></div>
+      <main class="memo-content">
+        <div id="memo-text" contenteditable="false" role="textbox"
+          aria-label="메모 내용" aria-multiline="true" data-placeholder="기억해 둘 내용을 적어보세요."></div>
+      </main>
+      <div class="memo-tools" id="memo-tools" role="group" aria-label="메모 서식">
+        <button type="button" data-format="bold" aria-label="굵게" title="굵게"><b>B</b></button>
+        <button type="button" data-format="italic" aria-label="기울임" title="기울임"><i>I</i></button>
+        <button type="button" data-format="underline" aria-label="밑줄" title="밑줄"><u>U</u></button>
+        <button type="button" data-format="strikeThrough" aria-label="취소선" title="취소선"><s>S</s></button>
+        <button type="button" data-format="insertUnorderedList" aria-label="글머리 기호" title="글머리 기호">☷</button>
+        <button type="button" id="rename-memo-tab" disabled>이름</button>
+      </div>
+    </div>
+    <dialog id="memo-rename" class="daymark-dialog">
+      <form id="memo-rename-form">
+        <label for="memo-tab-title">메모 이름</label>
+        <input id="memo-tab-title" maxlength="40" required autofocus>
+        <button type="submit">저장</button>
+      </form>
+    </dialog>
+    <dialog id="memo-delete" class="daymark-dialog">
+      <form method="dialog">
+        <p id="memo-delete-message"></p>
+        <button type="submit" autofocus>취소</button>
+        <button type="submit" id="memo-delete-confirm">삭제</button>
+      </form>
+    </dialog>
+    <script src="memo.js" defer></script>
+    <script src="window-pin.js" defer></script>
+  </body>
+</html>

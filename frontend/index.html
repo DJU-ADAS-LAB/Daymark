@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#f6f4eb" />
+    <title>daymark.</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="widget" id="widget">
+      <header class="bar" data-tauri-drag-region>
+        <button class="pin-button" type="button" data-pin-window="main" aria-label="항상 위에 고정" aria-pressed="false" hidden></button>
+        <div class="bar-actions">
+          <button id="open-memo" type="button" title="메모 열기 또는 닫기" aria-haspopup="true">메모</button>
+          <span class="save-state" id="save-state" role="status" hidden></span>
+          <button id="close" type="button" aria-label="닫기" title="닫기">
+            ×
+          </button>
+        </div>
+      </header>
+      <div class="menu" id="menu" hidden>
+        <button type="button" id="today">오늘로 이동</button>
+        <button type="button" id="import">기존 데이터 가져오기</button
+        ><button type="button" id="export">데이터 내보내기</button
+        ><input
+          id="import-file"
+          type="file"
+          accept=".json,application/json"
+          hidden
+        />
+      </div>
+      <div class="body">
+        <aside class="month" id="month" aria-label="월간 달력">
+          <div class="month-header">
+            <h1 class="month-title" aria-live="polite">
+              <span id="year-label"></span>
+              <span id="month-label"></span>
+            </h1>
+            <div class="month-nav">
+              <button id="prev" type="button" aria-label="이전 달">‹</button>
+              <button id="next" type="button" aria-label="다음 달">›</button>
+            </div>
+          </div>
+          <div class="calendar-sheet">
+            <div class="weekdays" aria-hidden="true">
+              <span>일</span><span>월</span><span>화</span><span>수</span>
+              <span>목</span><span>금</span><span>토</span>
+            </div>
+            <div class="grid" id="grid"></div>
+          </div>
+        </aside>
+        <section class="task-panel" id="task-panel" aria-labelledby="date-label" hidden>
+          <div class="panel-actions" data-tauri-drag-region>
+            <button class="pin-button" type="button" data-pin-window="checklist" aria-label="항상 위에 고정" aria-pressed="false" hidden></button>
+            <button class="task-action panel-close" id="close-panel" type="button"
+              aria-label="체크리스트 닫기" title="체크리스트 닫기">×</button>
+          </div>
+          <main class="main">
+            <h1 class="date-title" id="date-label"></h1>
+            <div
+              class="track"
+              role="progressbar"
+              aria-label="완료 진행률"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+              id="progress"
+            >
+              <div class="fill" id="progress-fill"></div>
+            </div>
+            <form class="composer" id="task-form">
+              <input
+                id="task-input"
+                maxlength="200"
+                placeholder="할 일을 적어주세요"
+                aria-label="할 일 입력"
+                required
+                autocomplete="off"
+              /><button type="submit">추가</button>
+              <button type="button" id="add-task-schedule" aria-haspopup="dialog" disabled>일정</button>
+            </form>
+            <ul class="tasks" id="tasks"></ul>
+            <span class="save-state task-save-error" id="task-save-error" role="status" hidden></span>
+          </main>
+          <footer class="footer"><span id="task-count"></span></footer>
+        </section>
+      </div>
+    </div>
+    <dialog id="schedules-dialog" class="daymark-dialog" aria-labelledby="schedules-heading">
+      <header class="schedule-header">
+        <h2 id="schedules-heading">일정</h2>
+        <form method="dialog"><button type="submit" aria-label="입력 창 닫기">×</button></form>
+      </header>
+      <form id="schedule-form">
+        <p id="schedule-period" class="schedule-period"></p>
+        <label>이름 <input id="schedule-title" maxlength="200" required></label>
+        <label id="schedule-add-time" hidden>
+          <input id="schedule-use-time" type="checkbox" aria-controls="schedule-time-fields">
+          종료 시각 및 알림 설정
+        </label>
+        <fieldset id="schedule-time-fields">
+          <label>종료 시각 <input id="schedule-end" type="time" required></label>
+          <label>알림
+            <select id="schedule-lead">
+              <option value="60">종료 1시간 전</option>
+              <option value="120">종료 2시간 전</option>
+              <option value="0">알림 없음</option>
+            </select>
+          </label>
+        </fieldset>
+        <div class="schedule-actions">
+          <button type="submit" id="schedule-submit">일정 추가</button>
+        </div>
+      </form>
+      <p id="schedule-status" role="status" hidden></p>
+    </dialog>
+    <script src="app.js" defer></script>
+    <script src="schedules.js" defer></script>
+    <script src="window-pin.js" defer></script>
+  </body>
+</html>
