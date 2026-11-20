@@ -14,6 +14,19 @@ mod documents;
 mod memo_tabs;
 mod reminders;
 
+#[tauri::command]
+fn prepare_update(window: WebviewWindow) -> Result<(), String> {
+    if window.label() != "main" {
+        return Err("달력 창에서만 업데이트할 수 있습니다.".into());
+    }
+    for popup in window.webview_windows().into_values() {
+        if !popup.label().starts_with(memo_tabs::DETACHED_PREFIX) {
+            save_layout(&popup).map_err(|error| error.to_string())?;
+        }
+    }
+    Ok(())
+}
+
 const CHECKLIST_WINDOW: &str = "checklist";
 const MEMO_WINDOW: &str = "memo";
 const POPUPS: [&str; 2] = [CHECKLIST_WINDOW, MEMO_WINDOW];
@@ -267,10 +280,12 @@ async fn toggle_memo(calendar: WebviewWindow) -> Result<(), String> {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_notification::init())
         .manage(SessionClosing::default())
         .manage(memo_tabs::MemoDropTarget::default())
         .invoke_handler(tauri::generate_handler![
+            prepare_update,
             open_checklist,
             toggle_memo,
             documents::load_document,

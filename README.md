@@ -36,3 +36,20 @@ cargo tauri build --bundles nsis -- --locked
 ```
 
 인증서가 여러 개인 경우 `-CertificateThumbprint`로 하나를 지정합니다. 스크립트는 앱과 설치 파일의 게시자 서명 및 타임스탬프를 확인합니다.
+
+## GitHub Releases 업데이트
+
+GitHub 저장소 `DJU-ADAS-LAB/Daymark`의 Settings → Secrets and variables → Actions에 `TAURI_SIGNING_PRIVATE_KEY`를 등록합니다. 값은 이 PC의 `C:\Users\COMPUTER1\.daymark-signing\updater.key` 파일 내용입니다. 암호를 설정한 키라면 `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`도 등록합니다. 개인 키는 Git에 올리지 말고 별도로 백업합니다.
+
+`tauri.conf.json`과 `Cargo.toml`의 버전을 함께 올리고 `Cargo.lock`을 갱신한 뒤, 소스를 커밋하고 해당 버전 태그(예: `v0.1.3`)를 푸시하면 GitHub Actions가 Windows 설치 파일, 서명, `latest.json`을 포함한 릴리스 초안을 만듭니다. 초안을 게시하면 설치된 Daymark가 다음 시작 시 업데이트를 확인합니다. 달력을 우클릭해 수동 확인도 가능합니다.
+
+기존 0.1.1/0.1.2 설치 파일에는 업데이트 기능이 없으므로, 업데이트 기능을 포함한 설치 파일을 처음 한 번 직접 설치해야 합니다. 공개 저장소의 Releases를 사용하는 구성입니다. 비공개 저장소 배포에는 별도의 인증 가능한 업데이트 배포 서버가 필요합니다.
+
+로컬 빌드도 업데이트 서명이 필요합니다.
+
+```powershell
+$env:TAURI_SIGNING_PRIVATE_KEY = "$env:USERPROFILE\.daymark-signing\updater.key"
+cargo tauri build --bundles nsis -- --locked
+```
+
+이 업데이트 검증용 서명은 Windows 게시자 코드 서명과 별개입니다.

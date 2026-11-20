@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "updater",
+  "description": "Allow the calendar to check and install verified Daymark updates.",
+  "windows": ["main"],
+  "permissions": ["updater:default"]
+}
